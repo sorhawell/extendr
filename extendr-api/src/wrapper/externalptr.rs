@@ -158,8 +158,14 @@ impl<T: Any + Debug> TryFrom<&Robj> for ExternalPtr<T> {
             marker: std::marker::PhantomData,
         };
 
-        // Check the type name.
-        let type_name = std::any::type_name::<T>();
+        // Get rust type name.
+        let mut type_name = std::any::type_name::<T>();
+
+        //R tag is not prefixed crate/module path. Removing any such from type_name
+        if let Some(nested_type_name) = type_name.rsplit_once("::") {
+            type_name = nested_type_name.1
+        };        
+        //compare
         if res.tag().as_str() != Some(type_name) {
             return Err(Error::ExpectedExternalPtrType(res.robj, type_name.into()));
         }
