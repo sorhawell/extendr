@@ -5,7 +5,7 @@ use crate::{throw_r_error, Robj};
 
 use std::convert::Infallible;
 
-/// Throw an R error if a result is an error.
+/// Throw an R error if a result is an error..
 #[doc(hidden)]
 pub fn unwrap_or_throw<T>(r: std::result::Result<T, &'static str>) -> T {
     match r {
