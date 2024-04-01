@@ -5,12 +5,14 @@ use crate::{throw_r_error, Robj};
 
 use std::convert::Infallible;
 
-/// Throw an R error if a result is an error.
+/// Throw an R error if a result is an error..
 #[doc(hidden)]
 pub fn unwrap_or_throw<T>(r: std::result::Result<T, &'static str>) -> T {
     match r {
         Err(e) => {
-            throw_r_error(e.to_string());
+            let msg = e.to_string();
+            drop(e);
+            throw_r_error(msg);
         }
         Ok(v) => v,
     }
@@ -20,7 +22,9 @@ pub fn unwrap_or_throw<T>(r: std::result::Result<T, &'static str>) -> T {
 pub fn unwrap_or_throw_error<T>(r: std::result::Result<T, Error>) -> T {
     match r {
         Err(e) => {
-            throw_r_error(e.to_string());
+            let msg = e.to_string();
+            drop(e);
+            throw_r_error(msg);
         }
         Ok(v) => v,
     }
